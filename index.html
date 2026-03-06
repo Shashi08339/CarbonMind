@@ -1,0 +1,1959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CarbonMind — AI Carbon Intelligence Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<!-- <style>
+/* ═══════════════════════════════════════════
+   DESIGN SYSTEM — CARBONMIND v3
+   Aesthetic: NASA Mission Control × Apple Clarity
+   ═══════════════════════════════════════════ */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  /* Core Palette */
+  --void:        #080d16;
+  --surface-0:   #0d1420;
+  --surface-1:   #111927;
+  --surface-2:   #16202e;
+  --surface-3:   #1c2a3a;
+  --border:      rgba(148,177,214,0.10);
+  --border-hi:   rgba(148,177,214,0.22);
+
+  /* Accent System */
+  --blue-500:    #3b82f6;
+  --blue-400:    #60a5fa;
+  --blue-300:    #93c5fd;
+  --teal-500:    #14b8a6;
+  --teal-400:    #2dd4bf;
+  --teal-300:    #5eead4;
+  --emerald:     #10b981;
+  --amber:       #f59e0b;
+  --rose:        #f43f5e;
+  --violet:      #8b5cf6;
+
+  /* Text */
+  --text-1:  #e8eef5;
+  --text-2:  #a8b8cc;
+  --text-3:  #637283;
+  --text-inv: #080d16;
+
+  /* Shadows */
+  --shadow-sm:  0 1px 3px rgba(0,0,0,.4), 0 1px 2px rgba(0,0,0,.3);
+  --shadow-md:  0 4px 16px rgba(0,0,0,.5), 0 2px 4px rgba(0,0,0,.3);
+  --shadow-lg:  0 20px 48px rgba(0,0,0,.6), 0 8px 16px rgba(0,0,0,.4);
+
+  /* Score Colors */
+  --score-critical: #f43f5e;
+  --score-poor:     #fb923c;
+  --score-moderate: #f59e0b;
+  --score-good:     #34d399;
+  --score-excellent: #10b981;
+
+  --font-body: 'DM Sans', system-ui, sans-serif;
+  --font-mono: 'DM Mono', monospace;
+  --radius:    14px;
+  --radius-sm: 8px;
+  --radius-lg: 20px;
+  --transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html, body {
+  font-family: var(--font-body);
+  background: var(--void);
+  color: var(--text-1);
+  min-height: 100vh;
+  font-size: 14px;
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── BACKGROUND ── */
+.bg-mesh {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 10%, rgba(59,130,246,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(20,184,166,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 60% at 60% 30%, rgba(139,92,246,0.04) 0%, transparent 60%);
+}
+
+/* ── CANVAS ── */
+#neural-canvas {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0.45;
+}
+
+/* ══════════════════════════════
+   TOPBAR
+══════════════════════════════ */
+.topbar {
+  position: sticky; top: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 28px; height: 60px;
+  background: rgba(8,13,22,0.88);
+  backdrop-filter: blur(24px) saturate(160%);
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--font-mono); font-size: 1rem; font-weight: 500;
+  color: var(--text-1); letter-spacing: 0.05em;
+}
+
+.logo-mark {
+  width: 32px; height: 32px; border-radius: 9px;
+  background: linear-gradient(135deg, var(--blue-500), var(--teal-500));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; font-weight: 700;
+  box-shadow: 0 0 20px rgba(59,130,246,0.3);
+  position: relative; overflow: hidden;
+}
+.logo-mark::after {
+  content:''; position:absolute; inset:0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+}
+
+.logo-sub { font-size: 0.7rem; color: var(--text-3); font-weight: 300; letter-spacing: 0.12em; }
+
+.topbar-right { display: flex; align-items: center; gap: 10px; }
+
+.nav-pill {
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 14px; border-radius: 40px;
+  font-size: 0.78rem; font-weight: 500; cursor: pointer;
+  border: 1px solid var(--border);
+  background: transparent; color: var(--text-2);
+  transition: var(--transition); white-space: nowrap;
+}
+.nav-pill:hover { border-color: var(--blue-500); color: var(--blue-400); background: rgba(59,130,246,0.08); }
+.nav-pill.primary {
+  background: linear-gradient(135deg, var(--blue-500), var(--teal-500));
+  border-color: transparent; color: var(--text-inv); font-weight: 600;
+  box-shadow: 0 4px 16px rgba(59,130,246,0.3);
+}
+.nav-pill.primary:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(59,130,246,0.45); }
+
+.live-badge {
+  display: flex; align-items: center; gap: 5px;
+  padding: 4px 10px; border-radius: 20px; font-size: 0.7rem;
+  background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.25);
+  color: var(--emerald); font-family: var(--font-mono);
+}
+.live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--emerald); animation: blink 1.8s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* ══════════════════════════════
+   PAGE LAYOUT
+══════════════════════════════ */
+.page {
+  position: relative; z-index: 10;
+  max-width: 1480px; margin: 0 auto;
+  padding: 24px 24px 40px;
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  grid-template-rows: auto;
+  gap: 16px;
+}
+
+/* ── PANELS ── */
+.card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  box-shadow: var(--shadow-md);
+  transition: border-color var(--transition), box-shadow var(--transition);
+  position: relative; overflow: hidden;
+}
+.card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(148,177,214,0.15), transparent);
+  pointer-events: none;
+}
+.card:hover { border-color: var(--border-hi); }
+
+.card-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  margin-bottom: 18px;
+}
+.card-title {
+  font-size: 0.7rem; font-weight: 500; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--text-3);
+  font-family: var(--font-mono);
+  display: flex; align-items: center; gap: 7px;
+}
+.card-title-icon { font-size: 0.85rem; }
+
+.section-label {
+  font-size: 0.68rem; font-weight: 500; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--text-3);
+  font-family: var(--font-mono); margin-bottom: 10px;
+}
+
+/* ══════════════════════════════
+   LEFT SIDEBAR — SCAN INPUT
+══════════════════════════════ */
+.sidebar { grid-row: 1 / 4; display: flex; flex-direction: column; gap: 14px; }
+
+/* Transport tabs */
+.transport-tabs {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 6px; margin-bottom: 4px;
+}
+.t-tab {
+  padding: 9px 8px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: transparent; color: var(--text-3);
+  font-size: 0.8rem; cursor: pointer;
+  transition: var(--transition); text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+}
+.t-tab:hover { border-color: var(--border-hi); color: var(--text-2); }
+.t-tab.active {
+  border-color: var(--blue-500);
+  background: rgba(59,130,246,0.1);
+  color: var(--blue-400);
+}
+.t-tab .t-icon { font-size: 1.2rem; }
+.t-tab .t-label { font-size: 0.65rem; font-family: var(--font-mono); letter-spacing: 0.08em; }
+
+/* Sliders */
+.input-block { margin-bottom: 16px; }
+.input-meta {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 8px;
+}
+.input-meta-label {
+  font-size: 0.75rem; color: var(--text-2); font-weight: 500;
+  display: flex; align-items: center; gap: 6px;
+}
+.input-meta-label .i-icon { color: var(--teal-400); }
+.input-meta-val {
+  font-family: var(--font-mono); font-size: 0.82rem; color: var(--text-1);
+  background: var(--surface-3); padding: 3px 10px; border-radius: 6px;
+  border: 1px solid var(--border); min-width: 60px; text-align: right;
+}
+
+.slider-wrap { position: relative; }
+input[type=range] {
+  -webkit-appearance: none; width: 100%; height: 6px;
+  border-radius: 4px; cursor: pointer; outline: none;
+  background: var(--surface-3);
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 18px; height: 18px;
+  border-radius: 50%; background: var(--blue-400);
+  border: 2px solid var(--surface-1);
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.2);
+  cursor: pointer; transition: box-shadow 0.15s;
+}
+input[type=range]::-webkit-slider-thumb:hover {
+  box-shadow: 0 0 0 5px rgba(59,130,246,0.3);
+}
+input[type=range]:focus::-webkit-slider-thumb {
+  box-shadow: 0 0 0 5px rgba(59,130,246,0.35);
+}
+/* Filled track via JS */
+
+/* Number input override */
+.number-input-row { display: flex; gap: 8px; }
+.num-input {
+  flex: 1; background: var(--surface-2); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 10px 14px;
+  color: var(--text-1); font-size: 0.95rem;
+  font-family: var(--font-mono); transition: var(--transition);
+}
+.num-input:focus { outline: none; border-color: var(--blue-500); background: var(--surface-3); }
+.num-unit {
+  display: flex; align-items: center; padding: 0 14px;
+  background: var(--surface-3); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); color: var(--text-3);
+  font-family: var(--font-mono); font-size: 0.78rem; white-space: nowrap;
+}
+
+/* Scan Button */
+.scan-btn {
+  width: 100%; padding: 16px 24px;
+  border: none; border-radius: var(--radius);
+  background: linear-gradient(135deg, #3b82f6 0%, #14b8a6 100%);
+  color: #fff; font-family: var(--font-body);
+  font-size: 0.92rem; font-weight: 600;
+  letter-spacing: 0.04em; cursor: pointer;
+  position: relative; overflow: hidden;
+  box-shadow: 0 4px 20px rgba(59,130,246,0.35);
+  transition: var(--transition);
+}
+.scan-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(59,130,246,0.5); }
+.scan-btn:active:not(:disabled) { transform: translateY(0); }
+.scan-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.scan-btn-content { display: flex; align-items: center; justify-content: center; gap: 8px; }
+.scan-btn::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent 60%);
+  pointer-events: none;
+}
+
+/* Progress */
+.scan-progress { margin-top: 12px; display: none; }
+.scan-progress.show { display: block; }
+.progress-track {
+  height: 3px; background: var(--surface-3); border-radius: 3px;
+  overflow: hidden; margin-bottom: 8px;
+}
+.progress-fill {
+  height: 100%; width: 0%; border-radius: 3px;
+  background: linear-gradient(90deg, var(--blue-500), var(--teal-500));
+  transition: width 0.35s ease;
+}
+.progress-phase {
+  font-size: 0.72rem; color: var(--text-3);
+  font-family: var(--font-mono); text-align: center;
+  letter-spacing: 0.05em;
+}
+
+/* Score Rating Mini */
+.score-mini-card {
+  background: var(--surface-2); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 16px;
+  display: flex; align-items: center; gap: 14px;
+}
+.score-mini-gauge { flex-shrink: 0; }
+
+/* ══════════════════════════════
+   MAIN CONTENT — RIGHT SIDE
+══════════════════════════════ */
+.main-content {
+  display: flex; flex-direction: column; gap: 16px;
+}
+
+/* KPI Row */
+.kpi-row {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+}
+
+.kpi-card {
+  background: var(--surface-1); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 18px 20px;
+  box-shadow: var(--shadow-sm); transition: var(--transition);
+  position: relative; overflow: hidden;
+}
+.kpi-card:hover { border-color: var(--border-hi); transform: translateY(-2px); }
+.kpi-card-accent {
+  position: absolute; top: 0; left: 0; bottom: 0; width: 3px; border-radius: 3px 0 0 3px;
+}
+.kpi-label {
+  font-size: 0.68rem; color: var(--text-3);
+  text-transform: uppercase; letter-spacing: 0.12em;
+  font-family: var(--font-mono); margin-bottom: 6px;
+}
+.kpi-value {
+  font-size: 1.65rem; font-weight: 600; color: var(--text-1);
+  font-family: var(--font-mono); line-height: 1.1;
+  transition: color 0.4s;
+}
+.kpi-sub { font-size: 0.72rem; color: var(--text-3); margin-top: 4px; }
+.kpi-delta {
+  font-size: 0.7rem; font-family: var(--font-mono); font-weight: 500;
+  margin-top: 6px; display: inline-flex; align-items: center; gap: 3px;
+  padding: 2px 8px; border-radius: 20px;
+}
+.delta-up { background: rgba(244,63,94,0.12); color: var(--rose); border: 1px solid rgba(244,63,94,0.2); }
+.delta-down { background: rgba(16,185,129,0.12); color: var(--emerald); border: 1px solid rgba(16,185,129,0.2); }
+.delta-neutral { background: var(--surface-3); color: var(--text-3); border: 1px solid var(--border); }
+
+/* Charts Row */
+.charts-row { display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: 14px; }
+
+/* Insights + Roadmap */
+.intel-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+/* Simulator card */
+.sim-row { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 14px; }
+
+/* ══════════════════════════════
+   GAUGE (SVG-based)
+══════════════════════════════ */
+.gauge-wrap { position: relative; width: 180px; height: 180px; margin: 0 auto; }
+.gauge-svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.gauge-bg-ring { fill: none; stroke: rgba(148,177,214,0.08); stroke-width: 14; }
+.gauge-fill-ring {
+  fill: none; stroke-width: 14; stroke-linecap: round;
+  stroke: var(--blue-400); stroke-dasharray: 565.48;
+  stroke-dashoffset: 565.48;
+  transition: stroke-dashoffset 1.4s cubic-bezier(0.4,0,0.2,1), stroke 0.8s ease;
+  filter: drop-shadow(0 0 10px currentColor);
+}
+.gauge-center {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+.gauge-score-num {
+  font-family: var(--font-mono); font-size: 2.8rem; font-weight: 500;
+  color: var(--text-1); line-height: 1; transition: color 0.6s;
+}
+.gauge-score-label { font-size: 0.62rem; color: var(--text-3); letter-spacing: 0.12em; margin-top: 3px; }
+.gauge-rating {
+  font-size: 0.75rem; font-weight: 600; margin-top: 6px;
+  padding: 3px 12px; border-radius: 20px;
+  font-family: var(--font-mono); letter-spacing: 0.06em;
+}
+
+/* ══════════════════════════════
+   RATING CLASSES
+══════════════════════════════ */
+.r-excellent { color: var(--score-excellent); background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.25); }
+.r-good      { color: var(--score-good);      background: rgba(52,211,153,0.12); border: 1px solid rgba(52,211,153,0.25); }
+.r-moderate  { color: var(--amber);            background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.25); }
+.r-poor      { color: #fb923c;                 background: rgba(251,146,60,0.12); border: 1px solid rgba(251,146,60,0.25); }
+.r-critical  { color: var(--rose);             background: rgba(244,63,94,0.12);  border: 1px solid rgba(244,63,94,0.25); }
+
+/* ══════════════════════════════
+   INSIGHT CARDS
+══════════════════════════════ */
+.insight-item {
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  margin-bottom: 8px;
+  transition: var(--transition);
+}
+.insight-item:hover { border-color: var(--border-hi); }
+.insight-item:last-child { margin-bottom: 0; }
+.insight-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.insight-icon { font-size: 1rem; }
+.insight-title { font-size: 0.78rem; font-weight: 600; color: var(--text-1); }
+.insight-body { font-size: 0.8rem; color: var(--text-2); line-height: 1.55; }
+.insight-badge {
+  font-size: 0.62rem; padding: 2px 8px; border-radius: 20px;
+  font-family: var(--font-mono); margin-left: auto; white-space: nowrap;
+}
+
+/* ══════════════════════════════
+   CONTRIBUTION BARS
+══════════════════════════════ */
+.contrib-bar-wrap { margin-bottom: 12px; }
+.contrib-bar-meta { display: flex; justify-content: space-between; margin-bottom: 6px; }
+.contrib-bar-label { font-size: 0.78rem; color: var(--text-2); display: flex; align-items: center; gap: 6px; }
+.contrib-bar-pct { font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-1); font-weight: 500; }
+.contrib-track {
+  height: 7px; background: var(--surface-3); border-radius: 6px; overflow: hidden;
+}
+.contrib-fill {
+  height: 100%; border-radius: 6px;
+  transition: width 0.9s cubic-bezier(0.4,0,0.2,1);
+  width: 0%;
+}
+
+/* ══════════════════════════════
+   ROADMAP
+══════════════════════════════ */
+.roadmap-week {
+  display: flex; gap: 12px; padding: 12px 0;
+  border-bottom: 1px solid var(--border); align-items: flex-start;
+}
+.roadmap-week:last-child { border-bottom: none; }
+.week-badge {
+  flex-shrink: 0; width: 44px; height: 44px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-size: 0.62rem; font-weight: 500;
+  line-height: 1.2; text-align: center;
+}
+.week-body {}
+.week-title { font-size: 0.82rem; font-weight: 600; color: var(--text-1); margin-bottom: 3px; }
+.week-detail { font-size: 0.76rem; color: var(--text-2); line-height: 1.4; }
+.week-impact { font-size: 0.7rem; color: var(--emerald); margin-top: 4px; font-family: var(--font-mono); }
+
+/* ══════════════════════════════
+   SIMULATOR
+══════════════════════════════ */
+.sim-controls { display: flex; flex-direction: column; gap: 14px; }
+.sim-row-item { }
+.sim-output {
+  background: var(--surface-2); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 16px; text-align: center;
+  margin-top: 14px;
+}
+.sim-before-after {
+  display: flex; align-items: center; justify-content: center; gap: 14px;
+  margin: 8px 0;
+}
+.sim-score-box {
+  font-family: var(--font-mono); font-size: 2rem; font-weight: 500;
+}
+.sim-arrow { font-size: 1.4rem; color: var(--text-3); }
+.sim-improvement { font-size: 0.8rem; color: var(--emerald); font-family: var(--font-mono); margin-top: 4px; }
+
+/* ══════════════════════════════
+   COMPARISON PANEL
+══════════════════════════════ */
+.comparison-bars { }
+.comp-bar-item { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.comp-label { font-size: 0.76rem; color: var(--text-2); min-width: 90px; }
+.comp-track { flex: 1; height: 8px; background: var(--surface-3); border-radius: 6px; overflow: hidden; }
+.comp-fill { height: 100%; border-radius: 6px; transition: width 1s; }
+.comp-val { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-3); min-width: 50px; text-align: right; }
+
+/* ══════════════════════════════
+   EMPTY / IDLE STATES
+══════════════════════════════ */
+.idle-state {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; padding: 28px 16px; gap: 8px;
+  color: var(--text-3); text-align: center;
+}
+.idle-icon { font-size: 2rem; opacity: 0.4; }
+.idle-text { font-size: 0.8rem; line-height: 1.5; }
+
+/* ══════════════════════════════
+   TOAST
+══════════════════════════════ */
+.toast {
+  position: fixed; bottom: 28px; right: 28px; z-index: 9999;
+  padding: 12px 20px; border-radius: var(--radius-sm);
+  background: var(--surface-2); border: 1px solid var(--border-hi);
+  color: var(--text-1); font-size: 0.82rem;
+  backdrop-filter: blur(20px);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(16px) scale(0.96); opacity: 0;
+  transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  pointer-events: none; max-width: 320px;
+}
+.toast.show { transform: translateY(0) scale(1); opacity: 1; pointer-events: auto; }
+
+/* ══════════════════════════════
+   UTIL
+══════════════════════════════ */
+.flex { display: flex; }
+.items-center { align-items: center; }
+.gap-8 { gap: 8px; }
+.gap-10 { gap: 10px; }
+.mt-4 { margin-top: 4px; }
+.mt-8 { margin-top: 8px; }
+.mt-12 { margin-top: 12px; }
+.mb-8 { margin-bottom: 8px; }
+.divider { height: 1px; background: var(--border); margin: 14px 0; }
+.text-muted { color: var(--text-3); font-size: 0.76rem; }
+.text-mono { font-family: var(--font-mono); }
+.text-accent { color: var(--blue-400); }
+.text-teal { color: var(--teal-400); }
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 0.66rem; padding: 3px 10px; border-radius: 20px;
+  font-family: var(--font-mono); font-weight: 500;
+  border: 1px solid var(--border);
+  background: var(--surface-3); color: var(--text-3);
+}
+.badge.blue { background: rgba(59,130,246,0.1); border-color: rgba(59,130,246,0.25); color: var(--blue-400); }
+.badge.teal { background: rgba(20,184,166,0.1); border-color: rgba(20,184,166,0.25); color: var(--teal-400); }
+
+/* Animate in */
+@keyframes fadeUp { from { opacity:0; transform: translateY(12px); } to { opacity:1; transform: translateY(0); } }
+.animate-in { animation: fadeUp 0.4s ease forwards; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--surface-3); border-radius: 10px; }
+
+/* ══════════════════════════════
+   CHART CANVAS overrides
+══════════════════════════════ */
+canvas { max-width: 100%; }
+
+/* ══════════════════════════════
+   RESPONSIVE
+══════════════════════════════ */
+@media (max-width: 1200px) {
+  .page { grid-template-columns: 300px 1fr; }
+  .kpi-row { grid-template-columns: 1fr 1fr; }
+  .charts-row { grid-template-columns: 1fr 1fr; }
+  .intel-row { grid-template-columns: 1fr; }
+  .sim-row { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 880px) {
+  .page { grid-template-columns: 1fr; }
+  .sidebar { grid-row: auto; }
+  .kpi-row { grid-template-columns: repeat(2, 1fr); }
+  .charts-row { grid-template-columns: 1fr; }
+}
+
+</style> -->
+</head>
+
+
+<link href="style.css" rel="stylesheet">
+
+
+<body>
+
+<div class="bg-mesh"></div>
+<canvas id="neural-canvas"></canvas>
+<div id="toast" class="toast"></div>
+
+<!-- ════════════════════ TOPBAR ════════════════════ -->
+<header class="topbar">
+  <div class="logo">
+    <div class="logo-mark">C</div>
+    <div>
+      <div>CarbonMind</div>
+      <div class="logo-sub">AI Carbon Intelligence Platform Built for Sustainability..&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<I>Designed by Shashi Teja..</I></div>
+      <div class="logo-sub"></div>
+      <div class="logo-sub"></div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="live-badge"><div class="live-dot"></div> SYSTEM ONLINE</div>
+    <button class="nav-pill" onclick="exportCSV()">⬇ Export CSV</button>
+    <button class="nav-pill" onclick="exportPDF()">📄 PDF Report</button>
+  </div>
+</header>
+
+<!-- ════════════════════ PAGE ════════════════════ -->
+<div class="page">
+
+  <!-- ╔══════════════════════╗
+       ║  LEFT SIDEBAR        ║
+       ╚══════════════════════╝ -->
+  <aside class="sidebar">
+
+    <!-- INPUT CARD -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="card-title-icon">⚙</span> Scan Parameters</div>
+        <span class="badge blue">Input</span>
+      </div>
+
+      <!-- Transport mode -->
+      <div class="section-label">Transport Mode</div>
+      <div class="transport-tabs" id="transportTabs">
+        <div class="t-tab active" data-mode="car" onclick="selectTransport(this)">
+          <span class="t-icon">🚗</span><span class="t-label">Car</span>
+        </div>
+        <div class="t-tab" data-mode="bus" onclick="selectTransport(this)">
+          <span class="t-icon">🚌</span><span class="t-label">Bus</span>
+        </div>
+        <div class="t-tab" data-mode="train" onclick="selectTransport(this)">
+          <span class="t-icon">🚆</span><span class="t-label">Train</span>
+        </div>
+        <div class="t-tab" data-mode="flight" onclick="selectTransport(this)">
+          <span class="t-icon">✈️</span><span class="t-label">Flight</span>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Electricity -->
+      <div class="input-block">
+        <div class="input-meta">
+          <div class="input-meta-label"><span class="i-icon">⚡</span> Electricity</div>
+          <div class="input-meta-val" id="elecVal">280 kWh</div>
+        </div>
+        <input type="range" id="elecSlider" min="0" max="1000" value="280"
+               oninput="updateSlider('elec', this.value)">
+        <div class="number-input-row mt-4">
+          <input type="number" class="num-input" id="elecInput" value="280" min="0" max="9999"
+                 oninput="updateInput('elec', this.value)">
+          <span class="num-unit">kWh/mo</span>
+        </div>
+      </div>
+
+      <!-- Travel -->
+      <div class="input-block">
+        <div class="input-meta">
+          <div class="input-meta-label"><span class="i-icon">🛣</span> Distance Traveled</div>
+          <div class="input-meta-val" id="travelVal">120 km</div>
+        </div>
+        <input type="range" id="travelSlider" min="0" max="2000" value="120"
+               oninput="updateSlider('travel', this.value)">
+        <div class="number-input-row mt-4">
+          <input type="number" class="num-input" id="travelInput" value="120" min="0" max="99999"
+                 oninput="updateInput('travel', this.value)">
+          <span class="num-unit">km/mo</span>
+        </div>
+      </div>
+
+      <!-- Device -->
+      <div class="input-block">
+        <div class="input-meta">
+          <div class="input-meta-label"><span class="i-icon">💻</span> Device Usage</div>
+          <div class="input-meta-val" id="deviceVal">8 hrs</div>
+        </div>
+        <input type="range" id="deviceSlider" min="0" max="24" value="8"
+               oninput="updateSlider('device', this.value)">
+        <div class="number-input-row mt-4">
+          <input type="number" class="num-input" id="deviceInput" value="8" min="0" max="24"
+                 oninput="updateInput('device', this.value)">
+          <span class="num-unit">hrs/day</span>
+        </div>
+      </div>
+
+      <!-- Scan button -->
+      <button class="scan-btn" id="scanBtn" onclick="runScan()">
+        <span class="scan-btn-content" id="scanBtnContent">
+          <span>⬡</span> Run Carbon Scan
+        </span>
+      </button>
+
+      <!-- Progress -->
+      <div class="scan-progress" id="scanProgress">
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="progress-phase" id="progressPhase">Initializing...</div>
+      </div>
+    </div>
+
+    <!-- GAUGE CARD -->
+    <div class="card" style="text-align:center;">
+      <div class="card-header" style="justify-content:center; margin-bottom:12px;">
+        <div class="card-title"><span class="card-title-icon">◎</span> Carbon Score</div>
+      </div>
+      <div class="gauge-wrap">
+        <svg class="gauge-svg" viewBox="0 0 200 200">
+          <circle class="gauge-bg-ring" cx="100" cy="100" r="84"/>
+          <circle class="gauge-fill-ring" id="gaugeRing" cx="100" cy="100" r="84"/>
+        </svg>
+        <div class="gauge-center">
+          <div class="gauge-score-num" id="gaugeNum">--</div>
+          <div class="gauge-score-label">/ 100</div>
+          <div class="gauge-rating r-moderate" id="gaugeRating" style="display:none;"></div>
+        </div>
+      </div>
+
+      <!-- Contribution mini-bars -->
+      <div class="mt-12">
+        <div class="contrib-bar-wrap">
+          <div class="contrib-bar-meta">
+            <div class="contrib-bar-label">⚡ Electricity</div>
+            <div class="contrib-bar-pct" id="cpElec">--</div>
+          </div>
+          <div class="contrib-track">
+            <div class="contrib-fill" id="cfElec" style="background:var(--blue-400);"></div>
+          </div>
+        </div>
+        <div class="contrib-bar-wrap">
+          <div class="contrib-bar-meta">
+            <div class="contrib-bar-label">🚗 Travel</div>
+            <div class="contrib-bar-pct" id="cpTravel">--</div>
+          </div>
+          <div class="contrib-track">
+            <div class="contrib-fill" id="cfTravel" style="background:var(--teal-400);"></div>
+          </div>
+        </div>
+        <div class="contrib-bar-wrap">
+          <div class="contrib-bar-meta">
+            <div class="contrib-bar-label">💻 Devices</div>
+            <div class="contrib-bar-pct" id="cpDevice">--</div>
+          </div>
+          <div class="contrib-track">
+            <div class="contrib-fill" id="cfDevice" style="background:var(--violet);"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ╔══════════════════════╗
+       ║  MAIN CONTENT        ║
+       ╚══════════════════════╝ -->
+  <div class="main-content">
+
+    <!-- KPI ROW -->
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-card-accent" style="background:var(--blue-500);"></div>
+        <div class="kpi-label">Total CO₂ Emissions</div>
+        <div class="kpi-value" id="kpiTotal">--</div>
+        <div class="kpi-sub">kg per month</div>
+        <div class="kpi-delta delta-neutral" id="kpiTotalDelta">No prior scan</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-card-accent" style="background:var(--teal-500);"></div>
+        <div class="kpi-label">Annual Projection</div>
+        <div class="kpi-value" id="kpiAnnual">--</div>
+        <div class="kpi-sub">kg CO₂ / year</div>
+        <div class="kpi-delta delta-neutral" id="kpiAnnualSub">—</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-card-accent" style="background:var(--emerald);"></div>
+        <div class="kpi-label">Trees Required</div>
+        <div class="kpi-value" id="kpiTrees">--</div>
+        <div class="kpi-sub">to offset emissions</div>
+        <div class="kpi-delta delta-neutral" id="kpiTreeSub">—</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-card-accent" style="background:var(--violet);"></div>
+        <div class="kpi-label">vs Global Average</div>
+        <div class="kpi-value" id="kpiVsAvg">--</div>
+        <div class="kpi-sub">World avg: 150 kg/mo</div>
+        <div class="kpi-delta" id="kpiVsDelta">—</div>
+      </div>
+    </div>
+
+    <!-- CHARTS ROW -->
+    <div class="charts-row">
+      <!-- Breakdown Doughnut -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><span class="card-title-icon">◑</span> Emission Breakdown</div>
+        </div>
+        <div id="donutIdle" class="idle-state">
+          <div class="idle-icon">◑</div>
+          <div class="idle-text">Run a scan to<br>see breakdown</div>
+        </div>
+        <div id="donutWrap" style="display:none; position:relative; height:210px;">
+          <canvas id="donutChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Bar chart -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><span class="card-title-icon">▦</span> Factor Contributions</div>
+        </div>
+        <div id="barIdle" class="idle-state">
+          <div class="idle-icon">▦</div>
+          <div class="idle-text">Run a scan to<br>see bar chart</div>
+        </div>
+        <div id="barWrap" style="display:none; position:relative; height:210px;">
+          <canvas id="barChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Line chart -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><span class="card-title-icon">∿</span> Score History</div>
+          <span class="badge" id="histCountBadge">0 scans</span>
+        </div>
+        <div id="lineIdle" class="idle-state">
+          <div class="idle-icon">∿</div>
+          <div class="idle-text">Scan history<br>will appear here</div>
+        </div>
+        <div id="lineWrap" style="display:none; position:relative; height:210px;">
+          <canvas id="lineChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- INTELLIGENCE ROW -->
+    <div class="intel-row">
+      <!-- AI Insights -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><span class="card-title-icon">◈</span> AI Intelligence Report</div>
+          <span class="badge blue" id="insightStatusBadge">IDLE</span>
+        </div>
+        <div id="insightsContainer">
+          <div class="idle-state">
+            <div class="idle-icon">◈</div>
+            <div class="idle-text">Insights will appear<br>after your first scan</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reduction Suggestions -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><span class="card-title-icon">▲</span> Reduction Suggestions</div>
+        </div>
+        <div id="suggestionsContainer">
+          <div class="idle-state">
+            <div class="idle-icon">▲</div>
+            <div class="idle-text">Personalized suggestions<br>generated after scan</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SIMULATOR + ROADMAP ROW -->
+    <div class="sim-row">
+      <!-- Score Simulator -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><span class="card-title-icon">⊡</span> Score Improvement Simulator</div>
+          <span class="badge teal">What-if</span>
+        </div>
+        <div id="simIdle" class="idle-state">
+          <div class="idle-icon">⊡</div>
+          <div class="idle-text">Run a scan to unlock<br>the improvement simulator</div>
+        </div>
+        <div id="simContent" style="display:none;">
+          <div class="sim-controls">
+            <div class="sim-row-item">
+              <div class="input-meta">
+                <div class="input-meta-label">⚡ Reduce Electricity by</div>
+                <div class="input-meta-val" id="simElecVal">0%</div>
+              </div>
+              <input type="range" id="simElecSlider" min="0" max="80" value="0"
+                     oninput="updateSimulator()">
+            </div>
+            <div class="sim-row-item">
+              <div class="input-meta">
+                <div class="input-meta-label">🚗 Reduce Travel by</div>
+                <div class="input-meta-val" id="simTravelVal">0%</div>
+              </div>
+              <input type="range" id="simTravelSlider" min="0" max="80" value="0"
+                     oninput="updateSimulator()">
+            </div>
+            <div class="sim-row-item">
+              <div class="input-meta">
+                <div class="input-meta-label">💻 Reduce Device by</div>
+                <div class="input-meta-val" id="simDeviceVal">0%</div>
+              </div>
+              <input type="range" id="simDeviceSlider" min="0" max="80" value="0"
+                     oninput="updateSimulator()">
+            </div>
+          </div>
+          <div class="sim-output" id="simOutput">
+            <div class="text-muted mb-8">Projected Score Change</div>
+            <div class="sim-before-after">
+              <div class="sim-score-box" id="simBefore" style="color:var(--text-3);">--</div>
+              <div class="sim-arrow">→</div>
+              <div class="sim-score-box" id="simAfter" style="color:var(--emerald);">--</div>
+            </div>
+            <div class="sim-improvement" id="simImprovement">—</div>
+            <div id="simBreakdown" style="margin-top:14px;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comparison Panel -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><span class="card-title-icon">≡</span> Global Benchmark</div>
+        </div>
+        <div id="compIdle" class="idle-state">
+          <div class="idle-icon">≡</div>
+          <div class="idle-text">Run scan to compare<br>against benchmarks</div>
+        </div>
+        <div id="compContent" style="display:none;">
+          <div class="comparison-bars">
+            <div class="comp-bar-item">
+              <div class="comp-label">You (Monthly)</div>
+              <div class="comp-track"><div class="comp-fill" id="compYou" style="background:var(--blue-400);width:0%"></div></div>
+              <div class="comp-val" id="compYouVal">—</div>
+            </div>
+            <div class="comp-bar-item">
+              <div class="comp-label">World Avg</div>
+              <div class="comp-track"><div class="comp-fill" style="background:var(--text-3);width:55%"></div></div>
+              <div class="comp-val">150 kg</div>
+            </div>
+            <div class="comp-bar-item">
+              <div class="comp-label">EU Average</div>
+              <div class="comp-track"><div class="comp-fill" style="background:var(--teal-500);width:38%"></div></div>
+              <div class="comp-val">~100 kg</div>
+            </div>
+            <div class="comp-bar-item">
+              <div class="comp-label">Sustainable</div>
+              <div class="comp-track"><div class="comp-fill" style="background:var(--emerald);width:18%"></div></div>
+              <div class="comp-val">~50 kg</div>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div id="compVerdict" class="text-muted" style="font-size:0.8rem; line-height:1.55;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REDUCTION ROADMAP -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="card-title-icon">⊹</span> 4-Week Carbon Reduction Roadmap</div>
+        <span class="badge" id="roadmapImpactBadge">—</span>
+      </div>
+      <div id="roadmapContainer">
+        <div class="idle-state">
+          <div class="idle-icon">⊹</div>
+          <div class="idle-text">A personalized reduction plan will be generated after your scan</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main-content -->
+</div><!-- /page -->
+
+    <script src="script.js"></script>
+
+<!-- ════════════════════════════════════════
+     JAVASCRIPT — CARBONMIND INTELLIGENCE
+════════════════════════════════════════ -->
+<!-- <script>
+'use strict';
+
+/* ═══════════════════════════════════════
+   STATE
+═══════════════════════════════════════ */
+const State = {
+  transport: 'car',
+  electricity: 280,
+  travel: 120,
+  device: 8,
+  history: [],
+  current: null,
+  isScanning: false,
+  scansRun: 0,
+  charts: { donut: null, bar: null, line: null }
+};
+
+/* ═══════════════════════════════════════
+   EMISSION CONSTANTS
+═══════════════════════════════════════ */
+const TRANSPORT_FACTORS = { car:0.052, bus:0.027, train:0.014, flight:0.255 };
+const GLOBAL_AVG_MONTHLY = 150; // kg CO₂
+const EU_AVG = 100;
+const SUSTAINABLE = 50;
+
+/* ═══════════════════════════════════════
+   CALCULATION ENGINE
+═══════════════════════════════════════ */
+function calcEmissions(elec, travel, device, transport) {
+  // Electricity: grid average 0.82 kg/kWh with usage-based modifier
+  const elecFactor = 0.82 * (elec > 500 ? 1.18 : elec > 300 ? 1.08 : elec < 100 ? 0.90 : 1.0);
+  const tFactor    = TRANSPORT_FACTORS[transport] || 0.052;
+  const devFactor  = 0.065 * (device > 16 ? 1.12 : device < 4 ? 0.85 : 1.0);
+
+  const eCO2 = elec   * elecFactor;
+  const tCO2 = travel * tFactor;
+  const dCO2 = device * devFactor * 30; // daily → monthly
+
+  const total = eCO2 + tCO2 + dCO2;
+  return {
+    electricity: round2(eCO2),
+    travel:      round2(tCO2),
+    device:      round2(dCO2),
+    total:       round2(total),
+    pctElec:     total > 0 ? round1((eCO2 / total) * 100) : 0,
+    pctTravel:   total > 0 ? round1((tCO2 / total) * 100) : 0,
+    pctDevice:   total > 0 ? round1((dCO2 / total) * 100) : 0
+  };
+}
+
+function calcScore(totalCO2) {
+  // Scoring: 0 kg = 100, 400+ kg = 0, roughly linear with diminishing returns
+  return Math.max(0, Math.min(100, Math.round(100 - (totalCO2 / 3.5))));
+}
+
+function rateScore(score) {
+  if (score >= 90) return { label: 'EXCELLENT', cls: 'r-excellent' };
+  if (score >= 70) return { label: 'GOOD',      cls: 'r-good' };
+  if (score >= 50) return { label: 'MODERATE',  cls: 'r-moderate' };
+  if (score >= 30) return { label: 'POOR',       cls: 'r-poor' };
+  return             { label: 'CRITICAL',        cls: 'r-critical' };
+}
+
+function round1(n) { return Math.round(n * 10) / 10; }
+function round2(n) { return Math.round(n * 100) / 100; }
+
+/* ═══════════════════════════════════════
+   INTELLIGENCE ENGINE
+═══════════════════════════════════════ */
+function generateInsights(bd, score, transport, prev) {
+  const ins = [];
+  const rating = rateScore(score);
+  const dominant = bd.pctElec >= bd.pctTravel && bd.pctElec >= bd.pctDevice
+    ? 'electricity' : bd.pctTravel >= bd.pctDevice ? 'travel' : 'device';
+
+  // 1. Root cause
+  const rootMap = {
+    electricity: `Your electricity consumption of ${State.electricity} kWh/mo generates ${bd.electricity} kg CO₂ — representing ${bd.pctElec}% of your total footprint and is the primary driver of your score.`,
+    travel:      `Your ${transport} travel of ${State.travel} km/mo produces ${bd.travel} kg CO₂ (${bd.pctTravel}% of total). ${transport === 'flight' ? 'Aviation is one of the highest per-km emission sources.' : transport === 'car' ? 'Private car use has 2–4× the emissions of public transit.' : 'Your transport mode is relatively efficient.'}`,
+    device:      `Device usage of ${State.device} hrs/day contributes ${bd.device} kg CO₂/mo (${bd.pctDevice}%). Extended screen time increases energy draw from devices and cooling infrastructure.`
+  };
+  ins.push({ icon: '🔍', title: 'Root Cause Analysis', body: rootMap[dominant], tag: dominant === 'electricity' ? 'HIGH IMPACT' : 'PRIMARY SOURCE', tagCls: 'r-moderate' });
+
+  // 2. Score explanation
+  const scoreExpl = score >= 70
+    ? `Your carbon score of ${score}/100 (${rating.label}) reflects an emission level below the global average of ${GLOBAL_AVG_MONTHLY} kg/mo. You are performing better than most users.`
+    : score >= 50
+    ? `Your carbon score of ${score}/100 (${rating.label}) — your total of ${bd.total} kg/mo is ${round1(bd.total - GLOBAL_AVG_MONTHLY)} kg above the EU average. Targeted reductions can move you into the GOOD range.`
+    : `Your carbon score of ${score}/100 (${rating.label}) indicates emissions ${round1(bd.total - GLOBAL_AVG_MONTHLY)} kg above the global average. Immediate action on your top contributor (${dominant}) is recommended.`;
+  ins.push({ icon: '◎', title: `Score: ${score}/100 — ${rating.label}`, body: scoreExpl, tag: rating.label, tagCls: rating.cls });
+
+  // 3. Comparison
+  const diff = round1(bd.total - GLOBAL_AVG_MONTHLY);
+  ins.push({
+    icon: '≡',
+    title: 'Benchmark Comparison',
+    body: diff > 0
+      ? `Your emissions are ${diff} kg/mo (${round1((diff / GLOBAL_AVG_MONTHLY) * 100)}%) above the world average. Reducing to the world average alone would raise your score by ~${Math.round(diff / 3.5)} points.`
+      : `You are ${Math.abs(diff)} kg/mo below the world average — placing you in the top tier of low-emission lifestyles. To reach the sustainability target (50 kg/mo) requires a further ${round1(bd.total - SUSTAINABLE)} kg reduction.`,
+    tag: diff > 0 ? 'ABOVE AVG' : 'BELOW AVG',
+    tagCls: diff > 0 ? 'r-poor' : 'r-good'
+  });
+
+  // 4. Trend if history available
+  if (prev) {
+    const prevTotal  = prev.bd ? prev.bd.total : prev.total;
+    const trendDelta = round1(bd.total - prevTotal);
+    const trendDir   = trendDelta > 0 ? 'increased' : 'decreased';
+    ins.push({
+      icon: trendDelta > 0 ? '📈' : '📉',
+      title: 'Trend Analysis',
+      body: `Since your last scan, emissions have ${trendDir} by ${Math.abs(trendDelta)} kg/mo (${round1((Math.abs(trendDelta)/prevTotal)*100)}%). ${trendDelta < 0 ? 'You are on the right track — keep reducing.' : 'Review what changed and take corrective action.'}`,
+      tag: trendDelta > 0 ? '↑ RISING' : '↓ FALLING',
+      tagCls: trendDelta > 0 ? 'r-poor' : 'r-good'
+    });
+  }
+
+  return ins;
+}
+
+function generateCarbonDiagnosis(bd, score) {
+  const parts = [
+    { name:'Electricity', value:bd.electricity, pct:bd.pctElec },
+    { name:'Travel',      value:bd.travel,       pct:bd.pctTravel },
+    { name:'Device',      value:bd.device,       pct:bd.pctDevice }
+  ];
+  parts.sort((a,b) => b.value - a.value);
+  const main = parts[0], secondary = parts[1];
+
+  const severity = score >= 85 ? 'LOW RISK'      :
+                   score >= 70 ? 'MODERATE RISK' :
+                   score >= 50 ? 'HIGH RISK'     :
+                   score >= 30 ? 'SEVERE RISK'   : 'CRITICAL RISK';
+  const severityClass = score >= 85 ? 'r-excellent' :
+                        score >= 70 ? 'r-good'      :
+                        score >= 50 ? 'r-moderate'  :
+                        score >= 30 ? 'r-poor'       : 'r-critical';
+
+  // Real improvement using actual calcScore function — not arbitrary
+  const reducedTotal      = round2(bd.total - main.value * 0.4);
+  const improvedScore     = calcScore(reducedTotal);
+  const improvementPotential = improvedScore - score;
+
+  return {
+    severity, severityClass, main, secondary, improvementPotential,
+    explanation:
+      `${main.name} contributes ${main.pct}% (${main.value} kg CO₂/mo), making it the dominant emission source. ` +
+      `A 40% reduction in ${main.name.toLowerCase()} would increase your score by ${improvementPotential} points (${score} → ${improvedScore}).`
+  };
+}
+
+function generateSuggestions(bd, transport) {
+  const s = [];
+  const dom = bd.pctElec >= bd.pctTravel && bd.pctElec >= bd.pctDevice ? 'electricity'
+              : bd.pctTravel >= bd.pctDevice ? 'travel' : 'device';
+
+  // Primary category suggestions
+  if (dom === 'electricity' || bd.electricity > 100) {
+    s.push({ icon:'☀️', title:'Switch to Renewable Energy', detail:`Your ${bd.electricity} kg from electricity could be cut by up to 90% with a green energy tariff or solar panels.`, impact:'−' + round1(bd.electricity * 0.85) + ' kg/mo' });
+    s.push({ icon:'💡', title:'Replace with LED Lighting', detail:'LED bulbs use 75% less energy. Replacing 10 incandescent bulbs saves ~12 kWh/mo on average.', impact:'−5–15 kg/mo' });
+    s.push({ icon:'🌡️', title:'Optimise HVAC Settings', detail:'Reducing AC/heating by 2°C can lower energy use by 6–8%. Use smart thermostats for automatic scheduling.', impact:'−10–20 kg/mo' });
+  }
+  if (dom === 'travel' || bd.travel > 30) {
+    const tMap = {
+      car:    [{ icon:'🚆', title:'Switch to Public Transit',     detail:`Taking train instead of car reduces per-km emissions by ~73%. On your ${State.travel} km/mo, this saves ${round1(bd.travel * 0.70)} kg CO₂.`,       impact:`−${round1(bd.travel * 0.70)} kg/mo` }],
+      flight: [{ icon:'🎯', title:'Purchase Carbon Offsets',        detail:'Verified carbon offset credits neutralise unavoidable flight emissions. 1 ton offset ≈ ₹800–2,000.',                                               impact:'Full neutralisation' }],
+      bus:    [{ icon:'🚲', title:'Cycle for Short Trips',          detail:'Replacing bus trips under 5 km with cycling eliminates emissions entirely and improves health.',                                                    impact:'−100% for those trips' }],
+      train:  [{ icon:'✅', title:'Your Transport Is Efficient',    detail:`Train travel at ${TRANSPORT_FACTORS.train} kg/km is among the lowest-emission modes. Consider electric vehicles for any remaining car journeys.`,   impact:'Already optimal' }]
+    };
+    s.push(...(tMap[transport] || tMap.car));
+    if (transport === 'car') s.push({ icon:'🚗', title:'Carpool or Rideshare', detail:'Sharing a journey with 3 others cuts per-person emissions by 75%.', impact:`−${round1(bd.travel * 0.70)} kg/mo` });
+  }
+  if (dom === 'device' || bd.device > 10) {
+    s.push({ icon:'🔋', title:'Enable Power Saving Modes', detail:'Activating low-power mode across devices can reduce energy draw by 20–30%.', impact:'−3–8 kg/mo' });
+    s.push({ icon:'⏸️', title:'Eliminate Idle Device Usage', detail:`Devices in standby still consume power. Turning off ${State.device > 6 ? 'during sleep hours' : 'unused devices'} reduces device CO₂ by ~15%.`, impact:`−${round1(bd.device * 0.15)} kg/mo` });
+  }
+
+  // Always add offset suggestion at end
+  s.push({ icon:'🌳', title:`Plant ${Math.ceil(bd.total / 20)} Trees to Offset`, detail:`One mature tree absorbs ~20 kg CO₂/year. You need ${Math.ceil(bd.total / 20)} trees to offset your monthly emissions.`, impact:'Full annual offset' });
+
+  return s.slice(0, 5);
+}
+
+function generateRoadmap(bd, score) {
+  const dom = bd.pctElec >= bd.pctTravel && bd.pctElec >= bd.pctDevice ? 'electricity'
+              : bd.pctTravel >= bd.pctDevice ? 'travel' : 'device';
+  const targetScore = Math.min(100, score + 20);
+  const reduction   = round1((20 / 100) * bd.total); // ~20 point gain needs ~20% CO2 drop
+
+  const plans = {
+    electricity: [
+      { week:'Week 1', title:'Audit & Reduce Energy Use',   detail:`Review your ${State.electricity} kWh bill. Set AC/heating 2°C optimally. Switch to LED bulbs.`,                             impact:'+5–7 pts', color:'var(--blue-500)' },
+      { week:'Week 2', title:'Off-peak Scheduling',          detail:'Run washing machine, dishwasher, and EV charging after 11 PM. Typical savings: 10–15% on electricity.',                     impact:'+3–5 pts',  color:'var(--teal-500)' },
+      { week:'Week 3', title:'Renewable Energy Setup',       detail:'Enquire about green energy tariffs or install solar. Even partial solar can cut electricity CO₂ by 30–50%.',               impact:'+8–12 pts', color:'var(--emerald)' },
+      { week:'Week 4', title:'Consolidate & Measure',        detail:`Re-run scan to measure actual reduction. Target: reach score ${targetScore}. Continue with biggest wins from weeks 1–3.`, impact:'+4–6 pts',  color:'var(--violet)' }
+    ],
+    travel: [
+      { week:'Week 1', title:'Map Your Weekly Routes',       detail:`Log all your ${State.travel} km. Identify which journeys can switch to lower-emission modes.`,                             impact:'+4–6 pts', color:'var(--blue-500)' },
+      { week:'Week 2', title:'Switch 30% to Public Transit', detail:'Replace 30% of car trips with bus/train. This alone removes up to 20 kg/mo CO₂.',                                          impact:'+6–9 pts',  color:'var(--teal-500)' },
+      { week:'Week 3', title:'Carpool or Micro-mobility',    detail:'Set up a carpool with 2 colleagues for commutes. For <5 km trips, use bicycle or e-scooter.',                              impact:'+5–7 pts', color:'var(--emerald)' },
+      { week:'Week 4', title:'Remote Work Where Possible',   detail:'1 remote day/week saves ~20% of commute emissions monthly. Negotiate with employer.',                                     impact:'+3–5 pts',  color:'var(--violet)' }
+    ],
+    device: [
+      { week:'Week 1', title:'Enable Power Management',      detail:`Set all ${State.device > 6 ? 'devices' : 'computers'} to sleep after 5 min idle. Enable battery saver on mobile.`,        impact:'+3–4 pts', color:'var(--blue-500)' },
+      { week:'Week 2', title:'Reduce Screen Time by 2 hrs',  detail:'Cut 2 hours from daily device use. Replace with low-carbon activities: reading, walking, cooking.',                       impact:'+4–5 pts',  color:'var(--teal-500)' },
+      { week:'Week 3', title:'Dark Mode & Display Settings', detail:'Dark mode on OLED screens saves ~30% display power. Reduce screen brightness to 60%.',                                    impact:'+2–3 pts', color:'var(--emerald)' },
+      { week:'Week 4', title:'Smart Power Strips',           detail:'Phantom loads from TVs, routers, and chargers account for 5–10% of home electricity. Use smart strips.',                impact:'+2–3 pts',  color:'var(--violet)' }
+    ]
+  };
+  return { weeks: plans[dom], totalGain: `+${Math.round(score < 70 ? 18 : 10)}–${Math.round(score < 70 ? 24 : 16)} pts`, targetScore };
+}
+
+/* ═══════════════════════════════════════
+   SIMULATOR
+═══════════════════════════════════════ */
+function updateSimulator() {
+  if (!State.current) return;
+  const elecPct   = +document.getElementById('simElecSlider').value;
+  const travelPct = +document.getElementById('simTravelSlider').value;
+  const devPct    = +document.getElementById('simDeviceSlider').value;
+
+  document.getElementById('simElecVal').textContent   = elecPct + '%';
+  document.getElementById('simTravelVal').textContent = travelPct + '%';
+  document.getElementById('simDeviceVal').textContent = devPct + '%';
+
+  const newElec   = State.electricity * (1 - elecPct / 100);
+  const newTravel = State.travel       * (1 - travelPct / 100);
+  const newDevice = State.device       * (1 - devPct / 100);
+
+  const cur    = State.current;
+  const newBd  = calcEmissions(newElec, newTravel, newDevice, State.transport);
+  const newScore = calcScore(newBd.total);
+  const delta    = newScore - cur.score;
+
+  document.getElementById('simBefore').textContent      = cur.score;
+  document.getElementById('simAfter').textContent       = newScore;
+  document.getElementById('simAfter').style.color       = delta > 0 ? 'var(--emerald)' : delta < 0 ? 'var(--rose)' : 'var(--text-3)';
+  document.getElementById('simImprovement').textContent = delta === 0
+    ? 'No change — adjust sliders above'
+    : `Score ${delta > 0 ? 'improves' : 'drops'} by ${Math.abs(delta)} pts · ${round1(cur.bd.total)} → ${round1(newBd.total)} kg/mo`;
+  document.getElementById('simImprovement').style.color = delta > 0 ? 'var(--emerald)' : delta < 0 ? 'var(--rose)' : 'var(--text-3)';
+
+  // Per-source savings breakdown — fills empty space
+  const rows = [
+    { label:'⚡ Electricity', from:cur.bd.electricity, to:round2(newBd.electricity), pct:elecPct },
+    { label:'🚗 Travel',      from:cur.bd.travel,       to:round2(newBd.travel),       pct:travelPct },
+    { label:'💻 Devices',     from:cur.bd.device,       to:round2(newBd.device),       pct:devPct }
+  ];
+  const breakdownEl = document.getElementById('simBreakdown');
+  if (breakdownEl) {
+    breakdownEl.innerHTML = rows.map(r => `
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+        <span style="font-size:0.76rem;color:var(--text-2);min-width:90px;">${r.label}</span>
+        <div style="flex:1;height:5px;background:var(--surface-3);border-radius:4px;overflow:hidden;">
+          <div style="height:100%;width:${r.pct}%;background:var(--teal-500);border-radius:4px;transition:width 0.4s;"></div>
+        </div>
+        <span style="font-family:var(--font-mono);font-size:0.72rem;color:${r.pct>0?'var(--emerald)':'var(--text-3)'};min-width:70px;text-align:right;">
+          ${r.pct > 0 ? r.from + ' → ' + r.to : r.from + ' kg'}
+        </span>
+      </div>`).join('')
+    + `<div style="display:flex;justify-content:space-between;padding-top:8px;border-top:1px solid var(--border);margin-top:4px;">
+        <span style="font-size:0.72rem;color:var(--text-3);font-family:var(--font-mono);">TOTAL SAVED</span>
+        <span style="font-family:var(--font-mono);font-size:0.82rem;font-weight:600;color:var(--emerald);">
+          −${round1(cur.bd.total - newBd.total)} kg/mo
+        </span>
+      </div>`;
+  }
+}
+
+/* ═══════════════════════════════════════
+   INPUT SYNC
+═══════════════════════════════════════ */
+function updateSlider(type, val) {
+  val = parseFloat(val);
+  if (type === 'elec')   { State.electricity = val; syncInputs('elec', val); }
+  if (type === 'travel') { State.travel = val;      syncInputs('travel', val); }
+  if (type === 'device') { State.device = val;      syncInputs('device', val); }
+}
+function updateInput(type, val) {
+  val = parseFloat(val) || 0;
+  if (type === 'elec')   { State.electricity = val; document.getElementById('elecSlider').value   = Math.min(1000, val); document.getElementById('elecVal').textContent   = val + ' kWh'; }
+  if (type === 'travel') { State.travel = val;      document.getElementById('travelSlider').value = Math.min(2000, val); document.getElementById('travelVal').textContent = val + ' km'; }
+  if (type === 'device') { State.device = val;      document.getElementById('deviceSlider').value = Math.min(24, val);   document.getElementById('deviceVal').textContent = val + ' hrs'; }
+}
+function syncInputs(type, val) {
+  const map = { elec:['elecInput','elecVal','kWh'], travel:['travelInput','travelVal','km'], device:['deviceInput','deviceVal','hrs'] };
+  document.getElementById(map[type][0]).value      = val;
+  document.getElementById(map[type][1]).textContent = val + ' ' + map[type][2];
+}
+function selectTransport(el) {
+  document.querySelectorAll('.t-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  State.transport = el.dataset.mode;
+}
+
+/* ═══════════════════════════════════════
+   SCAN SEQUENCE
+═══════════════════════════════════════ */
+async function runScan() {
+  if (State.isScanning) return;
+  State.isScanning = true;
+
+  const btn     = document.getElementById('scanBtn');
+  const progEl  = document.getElementById('scanProgress');
+  const fill    = document.getElementById('progressFill');
+  const phase   = document.getElementById('progressPhase');
+
+  btn.disabled = true;
+  progEl.classList.add('show');
+
+  const phases = [
+    { label:'Phase 1 / 4  —  Reading sensor inputs…',        pct:22,  ms:480 },
+    { label:'Phase 2 / 4  —  Computing emission factors…',   pct:50,  ms:560 },
+    { label:'Phase 3 / 4  —  Running intelligence engine…',  pct:78,  ms:600 },
+    { label:'Phase 4 / 4  —  Rendering dashboard…',          pct:100, ms:380 }
+  ];
+
+  for (const p of phases) {
+    phase.textContent  = p.label;
+    fill.style.width   = p.pct + '%';
+    await sleep(p.ms);
+  }
+
+  // ---- COMPUTE ----
+  const bd    = calcEmissions(State.electricity, State.travel, State.device, State.transport);
+  const score = calcScore(bd.total);
+  const rating= rateScore(score);
+  const ts    = new Date();
+
+  const prev  = State.history.length ? State.history[State.history.length - 1] : null;
+
+  const scan = { ts, bd, score, rating, transport: State.transport,
+                 electricity: State.electricity, travel: State.travel, device: State.device };
+  State.current = scan;
+  State.history.push(scan);
+  if (State.history.length > 20) State.history.shift();
+  State.scansRun++;
+
+  // ---- RENDER ----
+  renderGauge(score, rating);
+  renderKPIs(bd, score, prev);
+  renderContribBars(bd);
+  renderCharts(bd);
+  renderInsights(bd, score, prev);
+  renderSuggestions(bd);
+  renderRoadmap(bd, score);
+  renderComparison(bd);
+  renderSimulator();
+  updateNeuralState(score, bd.total);
+
+  // Reset
+  await sleep(150);
+  fill.style.width   = '0%';
+  progEl.classList.remove('show');
+  btn.disabled       = false;
+  State.isScanning   = false;
+
+  document.getElementById('histCountBadge').textContent = State.history.length + ' scan' + (State.history.length !== 1 ? 's' : '');
+  showToast(`✅ Scan complete — ${bd.total} kg CO₂/mo · Score: ${score}/100 (${rating.label})`);
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+/* ═══════════════════════════════════════
+   RENDER — GAUGE
+═══════════════════════════════════════ */
+function renderGauge(score, rating) {
+  const ring = document.getElementById('gaugeRing');
+  const num  = document.getElementById('gaugeNum');
+  const rat  = document.getElementById('gaugeRating');
+
+  const circumference = 2 * Math.PI * 84; // 527.7
+  const offset = circumference - (score / 100) * circumference;
+
+  const strokeColors = { 'r-excellent':'#10b981','r-good':'#34d399','r-moderate':'#f59e0b','r-poor':'#fb923c','r-critical':'#f43f5e' };
+  const color = strokeColors[rating.cls] || '#3b82f6';
+
+  ring.style.strokeDasharray  = circumference;
+  ring.style.strokeDashoffset = offset;
+  ring.style.stroke = color;
+  ring.style.filter = `drop-shadow(0 0 12px ${color})`;
+
+  animateNumber(num, parseInt(num.textContent) || 0, score, 900);
+
+  rat.className    = 'gauge-rating ' + rating.cls;
+  rat.textContent  = rating.label;
+  rat.style.display = 'inline-block';
+}
+
+/* ═══════════════════════════════════════
+   RENDER — KPIs
+═══════════════════════════════════════ */
+function renderKPIs(bd, score, prev) {
+  // Total CO2
+  const totalEl = document.getElementById('kpiTotal');
+  animateNumber(totalEl, parseFloat(totalEl.textContent) || 0, bd.total, 700);
+
+  // Annual
+  const annual = round2(bd.total * 12);
+  document.getElementById('kpiAnnual').textContent = annual.toFixed(0);
+  document.getElementById('kpiAnnualSub').textContent = annual > 1800 ? 'Above 1.5°C pathway' : 'Within climate targets';
+  document.getElementById('kpiAnnualSub').className = annual > 1800 ? 'kpi-delta delta-up' : 'kpi-delta delta-down';
+
+  // Trees
+  const trees = Math.ceil(bd.total * 12 / 20);
+  document.getElementById('kpiTrees').textContent = trees;
+  document.getElementById('kpiTreeSub').textContent = `Annual absorption = ${trees * 20} kg CO₂`;
+
+  // vs Average
+  const diff    = round1(bd.total - GLOBAL_AVG_MONTHLY);
+  const diffPct = round1((Math.abs(diff) / GLOBAL_AVG_MONTHLY) * 100);
+  document.getElementById('kpiVsAvg').textContent = (diff > 0 ? '+' : '') + diff + ' kg';
+  const deltaEl = document.getElementById('kpiVsDelta');
+  deltaEl.textContent = diff > 0 ? `↑ ${diffPct}% above world avg` : `↓ ${diffPct}% below world avg`;
+  deltaEl.className   = 'kpi-delta ' + (diff > 0 ? 'delta-up' : 'delta-down');
+
+  // Delta from prev scan
+  const deltaTotal = document.getElementById('kpiTotalDelta');
+  if (prev) {
+    const d = round1(bd.total - prev.bd.total);
+    deltaTotal.textContent = d === 0 ? 'No change' : (d > 0 ? '↑ +' : '↓ ') + d + ' kg vs last scan';
+    deltaTotal.className   = 'kpi-delta ' + (d > 0 ? 'delta-up' : d < 0 ? 'delta-down' : 'delta-neutral');
+  } else {
+    deltaTotal.textContent = 'First scan';
+    deltaTotal.className   = 'kpi-delta delta-neutral';
+  }
+}
+
+/* ═══════════════════════════════════════
+   RENDER — CONTRIBUTION BARS
+═══════════════════════════════════════ */
+function renderContribBars(bd) {
+  document.getElementById('cpElec').textContent   = bd.pctElec + '%';
+  document.getElementById('cpTravel').textContent = bd.pctTravel + '%';
+  document.getElementById('cpDevice').textContent = bd.pctDevice + '%';
+
+  // Small delay so transition fires
+  requestAnimationFrame(() => {
+    document.getElementById('cfElec').style.width   = bd.pctElec + '%';
+    document.getElementById('cfTravel').style.width = bd.pctTravel + '%';
+    document.getElementById('cfDevice').style.width = bd.pctDevice + '%';
+  });
+}
+
+/* ═══════════════════════════════════════
+   RENDER — CHARTS
+═══════════════════════════════════════ */
+const CHART_COLORS = {
+  electricity: { bg:'rgba(59,130,246,0.7)',   border:'#3b82f6' },
+  travel:      { bg:'rgba(20,184,166,0.7)',   border:'#14b8a6' },
+  device:      { bg:'rgba(139,92,246,0.7)',   border:'#8b5cf6' }
+};
+
+function chartDefaults() {
+  return {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { labels: { color:'#a8b8cc', font:{ family:"'DM Mono',monospace", size:11 }, padding:12, boxWidth:12 } } },
+    animation: { duration: 700, easing:'easeInOutQuart' }
+  };
+}
+
+function renderCharts(bd) {
+  // ---- DONUT ----
+  document.getElementById('donutIdle').style.display = 'none';
+  document.getElementById('donutWrap').style.display = 'block';
+  const donutCtx = document.getElementById('donutChart').getContext('2d');
+  if (State.charts.donut) { State.charts.donut.destroy(); }
+  State.charts.donut = new Chart(donutCtx, {
+    type: 'doughnut',
+    data: {
+      labels: ['⚡ Electricity', '🚗 Travel', '💻 Devices'],
+      datasets: [{ data: [bd.electricity, bd.travel, bd.device],
+        backgroundColor: [CHART_COLORS.electricity.bg, CHART_COLORS.travel.bg, CHART_COLORS.device.bg],
+        borderColor:     [CHART_COLORS.electricity.border, CHART_COLORS.travel.border, CHART_COLORS.device.border],
+        borderWidth: 2, hoverOffset: 8 }]
+    },
+    options: { ...chartDefaults(), cutout:'62%',
+      plugins: { ...chartDefaults().plugins,
+        tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.raw} kg (${round1((ctx.raw/bd.total)*100)}%)` },
+          backgroundColor:'#111927', borderColor:'rgba(148,177,214,0.2)', borderWidth:1,
+          titleColor:'#e8eef5', bodyColor:'#a8b8cc', padding:10, cornerRadius:8 }
+      }
+    }
+  });
+
+  // ---- BAR ----
+  document.getElementById('barIdle').style.display = 'none';
+  document.getElementById('barWrap').style.display = 'block';
+  const barCtx = document.getElementById('barChart').getContext('2d');
+  if (State.charts.bar) { State.charts.bar.destroy(); }
+  State.charts.bar = new Chart(barCtx, {
+    type: 'bar',
+    data: {
+      labels: ['⚡ Electricity', '🚗 Travel', '💻 Devices'],
+      datasets: [{
+        label: 'kg CO₂/mo',
+        data: [bd.electricity, bd.travel, bd.device],
+        backgroundColor: [CHART_COLORS.electricity.bg, CHART_COLORS.travel.bg, CHART_COLORS.device.bg],
+        borderColor:     [CHART_COLORS.electricity.border, CHART_COLORS.travel.border, CHART_COLORS.device.border],
+        borderWidth: 2, borderRadius: 8, borderSkipped: false
+      }]
+    },
+    options: { ...chartDefaults(),
+      plugins: { ...chartDefaults().plugins, legend:{ display:false },
+        tooltip: { backgroundColor:'#111927', borderColor:'rgba(148,177,214,0.2)', borderWidth:1,
+          titleColor:'#e8eef5', bodyColor:'#a8b8cc', padding:10, cornerRadius:8 }
+      },
+      scales: {
+        x: { grid:{ color:'rgba(148,177,214,0.06)' }, ticks:{ color:'#637283', font:{size:11} } },
+        y: { grid:{ color:'rgba(148,177,214,0.06)' }, ticks:{ color:'#637283', font:{size:11} },
+             title:{ display:true, text:'kg CO₂', color:'#637283', font:{size:10} } }
+      }
+    }
+  });
+
+  // ---- LINE ----
+  document.getElementById('lineIdle').style.display = 'none';
+  document.getElementById('lineWrap').style.display = 'block';
+  const lineCtx = document.getElementById('lineChart').getContext('2d');
+  const h       = State.history;
+  const labels  = h.map((s, i) => i === 0 ? '#1' : `#${i+1}`);
+  const scores  = h.map(s => s.score);
+  const co2s    = h.map(s => s.bd.total);
+  if (State.charts.line) { State.charts.line.destroy(); }
+  State.charts.line = new Chart(lineCtx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        { label:'Score', data:scores, borderColor:'#3b82f6', backgroundColor:'rgba(59,130,246,0.08)',
+          borderWidth:2, pointRadius:5, pointBackgroundColor:'#3b82f6', fill:true, tension:0.4, yAxisID:'yScore' },
+        { label:'CO₂ (kg)', data:co2s, borderColor:'#14b8a6', backgroundColor:'rgba(20,184,166,0.06)',
+          borderWidth:2, pointRadius:4, pointBackgroundColor:'#14b8a6', fill:false, tension:0.4, yAxisID:'yCO2',
+          borderDash:[4,3] }
+      ]
+    },
+    options: { ...chartDefaults(),
+      interaction: { mode:'index', intersect:false },
+      plugins: { ...chartDefaults().plugins,
+        legend:{ labels:{ color:'#a8b8cc', font:{size:10}, padding:10, boxWidth:10 } },
+        tooltip: { backgroundColor:'#111927', borderColor:'rgba(148,177,214,0.2)', borderWidth:1,
+          titleColor:'#e8eef5', bodyColor:'#a8b8cc', padding:10, cornerRadius:8 }
+      },
+      scales: {
+        x: { grid:{ color:'rgba(148,177,214,0.06)' }, ticks:{ color:'#637283', font:{size:10} } },
+        yScore: { type:'linear', position:'left', min:0, max:100,
+          grid:{ color:'rgba(148,177,214,0.06)' }, ticks:{ color:'#637283', font:{size:10} },
+          title:{ display:true, text:'Score', color:'#637283', font:{size:9} } },
+        yCO2: { type:'linear', position:'right', grid:{ display:false },
+          ticks:{ color:'#637283', font:{size:10} },
+          title:{ display:true, text:'CO₂ kg', color:'#637283', font:{size:9} } }
+      }
+    }
+  });
+}
+
+/* ═══════════════════════════════════════
+   RENDER — INSIGHTS
+═══════════════════════════════════════ */
+function renderInsights(bd, score, prev) {
+  // generateCarbonDiagnosis called ONCE here, reused — no duplicates
+  const diagnosis   = generateCarbonDiagnosis(bd, score);
+  const baseInsights = generateInsights(bd, score, State.transport, prev || null);
+  const insights = [];
+
+  // 1. Diagnosis header
+  insights.push({
+    icon:'🧠', title:`Carbon Diagnosis — ${diagnosis.severity}`,
+    body: diagnosis.explanation,
+    tag: diagnosis.main.name.toUpperCase() + ' DOMINANT', tagCls: diagnosis.severityClass
+  });
+
+  // 2–N. Root cause, score, benchmark, trend
+  insights.push(...baseInsights);
+
+  // Score explanation — real values
+  const scoreReason = score >= 80
+    ? `Your score is ${score}/100 because total emissions (${bd.total} kg/mo) are well below the global average of ${GLOBAL_AVG_MONTHLY} kg. Your lifestyle is relatively sustainable.`
+    : score >= 60
+    ? `Your score is ${score}/100 because ${diagnosis.main.name} (${diagnosis.main.pct}%) pulls your footprint above the EU average of ${EU_AVG} kg/mo. Reducing this category will have the highest impact.`
+    : `Your score is ${score}/100 because ${diagnosis.main.name} contributes ${diagnosis.main.pct}% of your ${bd.total} kg total — ${round1(bd.total - GLOBAL_AVG_MONTHLY)} kg above the global average. Immediate action needed.`;
+  insights.push({ icon:'📊', title:'Score Explanation', body: scoreReason, tag:'WHY THIS SCORE', tagCls: diagnosis.severityClass });
+
+  // Improvement potential — fully calculated
+  const co2Save       = round1(diagnosis.main.value * 0.4);
+  const newTotal      = round2(bd.total - co2Save);
+  const newScore      = calcScore(newTotal);
+  const gain          = newScore - score;
+  insights.push({
+    icon:'🚀', title:'Improvement Potential',
+    body:`Cutting ${diagnosis.main.name.toLowerCase()} by 40% saves ${co2Save} kg/mo → total drops to ${newTotal} kg → score rises from ${score} to ${newScore} (+${gain} pts). Model any scenario in the Simulator below.`,
+    tag:`+${gain} PTS POSSIBLE`, tagCls:'r-excellent'
+  });
+
+  // Sustainability classification — tiered, factual
+  const sust = bd.total <= 50  ? {label:'Net-Zero Level',     cls:'r-excellent', note:'You meet the 1.5°C climate target.'}
+             : bd.total <= 100 ? {label:'Sustainable Level',  cls:'r-good',      note:'Below EU average — keep improving.'}
+             : bd.total <= 200 ? {label:'Moderate Emissions', cls:'r-moderate',  note:'Exceeds sustainability targets.'}
+             :                   {label:'High Emissions',     cls:'r-poor',      note:'Significantly above safe thresholds.'};
+  insights.push({
+    icon:'🌍', title:'Sustainability Classification',
+    body:`${bd.total} kg/mo classifies as: ${sust.label}. ${sust.note} The 1.5°C pathway requires ≤50 kg/mo per person.`,
+    tag: sust.label, tagCls: sust.cls
+  });
+
+  // Real-world impact — fully calculated from actual values
+  const flightEquiv = round1(bd.total / 90);
+  const driveEquiv  = Math.round(bd.total / 0.052).toLocaleString();
+  const treeYears   = round1(bd.total / 20);
+  insights.push({
+    icon:'🌎', title:'Real-World Impact',
+    body:`${bd.total} kg CO₂/mo equals: ${flightEquiv} short-haul flights, OR driving ${driveEquiv} km by car, OR requires ${treeYears} trees for one full year to absorb.`,
+    tag:'IMPACT SCALE', tagCls: bd.total > GLOBAL_AVG_MONTHLY ? 'r-moderate' : 'r-good'
+  });
+
+  // Net-zero timeline — compound reduction math
+  const nzMonths = calcNetZeroMonths(bd.total, 0.08);
+  insights.push({
+    icon:'🌱', title:'Net-Zero Timeline',
+    body: nzMonths === 0
+      ? `Already within sustainable levels (${bd.total} kg ≤ 50 kg target). Maintain current habits.`
+      : `At 8%/mo reduction (roadmap pace), you reach the 50 kg sustainability target in ~${nzMonths} months (${Math.ceil(nzMonths/12)} yr${nzMonths > 12 ? 's' : ''}).`,
+    tag: nzMonths === 0 ? 'ACHIEVED' : `~${nzMonths} MONTHS`,
+    tagCls: nzMonths <= 12 ? 'r-excellent' : nzMonths <= 24 ? 'r-good' : 'r-moderate'
+  });
+
+  document.getElementById('insightStatusBadge').textContent = insights.length + ' SIGNALS';
+  document.getElementById('insightStatusBadge').className   = 'badge blue';
+
+  // Top 4 visible, rest collapsible — prevents overwhelming wall of cards
+  const SHOW = 4;
+  const top  = insights.slice(0, SHOW);
+  const more = insights.slice(SHOW);
+
+  document.getElementById('insightsContainer').innerHTML = `
+    ${top.map((ins, i) => insightCardHTML(ins, i)).join('')}
+    ${more.length ? `
+      <div id="insightsMore" style="display:none;">
+        ${more.map((ins, i) => insightCardHTML(ins, i + SHOW)).join('')}
+      </div>
+      <button id="insightsToggleBtn" onclick="toggleInsights()"
+        style="width:100%;margin-top:8px;padding:9px;background:var(--surface-3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-3);font-size:0.74rem;font-family:var(--font-mono);cursor:pointer;transition:var(--transition);letter-spacing:0.04em;"
+        onmouseover="this.style.borderColor='var(--border-hi)';this.style.color='var(--text-2)'"
+        onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-3)'">
+        ↓ &nbsp;Show ${more.length} more signals
+      </button>` : ''}
+  `;
+}
+
+function insightCardHTML(ins, i) {
+  return `<div class="insight-item animate-in" style="animation-delay:${i*50}ms">
+    <div class="insight-header">
+      <span class="insight-icon">${ins.icon}</span>
+      <span class="insight-title">${ins.title}</span>
+      <span class="insight-badge ${ins.tagCls}" style="font-size:0.62rem;padding:2px 8px;border-radius:20px;font-family:var(--font-mono);margin-left:auto;white-space:nowrap;">${ins.tag}</span>
+    </div>
+    <div class="insight-body">${ins.body}</div>
+  </div>`;
+}
+
+function toggleInsights() {
+  const el  = document.getElementById('insightsMore');
+  const btn = document.getElementById('insightsToggleBtn');
+  const open = el.style.display === 'block';
+  el.style.display  = open ? 'none' : 'block';
+  btn.textContent   = open ? `↓  Show ${el.children.length} more signals` : '↑  Show fewer';
+}
+
+function calcNetZeroMonths(current, rate) {
+  if (current <= 50) return 0;
+  let v = current, m = 0;
+  while (v > 50 && m < 120) { v *= (1 - rate); m++; }
+  return m;
+}
+
+/* ═══════════════════════════════════════
+   RENDER — SUGGESTIONS
+═══════════════════════════════════════ */
+function renderSuggestions(bd) {
+  const sugg = generateSuggestions(bd, State.transport);
+  document.getElementById('suggestionsContainer').innerHTML = sugg.map((s, i) => `
+    <div class="insight-item animate-in" style="animation-delay:${i*60}ms">
+      <div class="insight-header">
+        <span class="insight-icon">${s.icon}</span>
+        <span class="insight-title">${s.title}</span>
+        <span style="margin-left:auto;font-size:0.65rem;color:var(--emerald);font-family:var(--font-mono);">${s.impact}</span>
+      </div>
+      <div class="insight-body">${s.detail}</div>
+    </div>
+  `).join('');
+}
+
+/* ═══════════════════════════════════════
+   RENDER — ROADMAP
+═══════════════════════════════════════ */
+function renderRoadmap(bd, score) {
+  const { weeks, totalGain, targetScore } = generateRoadmap(bd, score);
+  document.getElementById('roadmapImpactBadge').textContent = `Expected: ${totalGain} points → target score ${targetScore}`;
+  document.getElementById('roadmapImpactBadge').className   = 'badge teal';
+
+  document.getElementById('roadmapContainer').innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
+      ${weeks.map((w, i) => `
+        <div class="roadmap-week animate-in" style="animation-delay:${i*80}ms;flex-direction:column;padding:14px;border-radius:var(--radius-sm);background:var(--surface-2);border:1px solid var(--border);">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+            <div class="week-badge" style="background:${w.color}22;border:1px solid ${w.color}44;color:${w.color}">${w.week}</div>
+            <div class="week-title">${w.title}</div>
+          </div>
+          <div class="week-detail">${w.detail}</div>
+          <div class="week-impact">Expected gain: ${w.impact}</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+/* ═══════════════════════════════════════
+   RENDER — COMPARISON
+═══════════════════════════════════════ */
+function renderComparison(bd) {
+  document.getElementById('compIdle').style.display    = 'none';
+  document.getElementById('compContent').style.display = 'block';
+
+  const maxVal = Math.max(bd.total, GLOBAL_AVG_MONTHLY, 280);
+  const pct    = Math.round((bd.total / maxVal) * 100);
+  document.getElementById('compYou').style.width      = pct + '%';
+  document.getElementById('compYou').style.background = bd.total > GLOBAL_AVG_MONTHLY ? 'var(--rose)' : 'var(--emerald)';
+  document.getElementById('compYouVal').textContent   = bd.total + ' kg';
+
+  const diff = round1(bd.total - GLOBAL_AVG_MONTHLY);
+  document.getElementById('compVerdict').innerHTML =
+    (diff > 0
+      ? `Your emissions are <strong style="color:var(--rose)">${diff} kg above</strong> the world average. To reach sustainable threshold (50 kg/mo), a <strong>${round1(bd.total - SUSTAINABLE)} kg reduction</strong> is needed.`
+      : `You are <strong style="color:var(--emerald)">${Math.abs(diff)} kg below</strong> the world average — top tier. To reach the 1.5°C target (50 kg/mo), a further <strong>${round1(Math.max(0, bd.total - SUSTAINABLE))} kg</strong> reduction is recommended.`)
+    + `<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px;">
+        ${[
+          ['vs World Avg',  diff > 0 ? '+'+diff : diff,          diff > 0 ? 'var(--rose)' : 'var(--emerald)'],
+          ['vs EU Avg',     round1(bd.total - EU_AVG) > 0 ? '+'+round1(bd.total-EU_AVG) : round1(bd.total-EU_AVG), round1(bd.total-EU_AVG)>0?'var(--rose)':'var(--emerald)'],
+          ['vs Sustainable',round1(bd.total - SUSTAINABLE) > 0 ? '+'+round1(bd.total-SUSTAINABLE) : '✓ Met',      round1(bd.total-SUSTAINABLE)>0?'var(--amber)':'var(--emerald)'],
+          ['Reduction Needed', Math.max(0,round1(bd.total-SUSTAINABLE))+' kg',  'var(--text-2)']
+        ].map(([label,val,color]) => `
+          <div style="background:var(--surface-3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;">
+            <div style="font-size:0.62rem;color:var(--text-3);font-family:var(--font-mono);letter-spacing:0.08em;margin-bottom:4px;text-transform:uppercase;">${label}</div>
+            <div style="font-family:var(--font-mono);font-size:1rem;font-weight:600;color:${color};">${val}</div>
+          </div>`).join('')}
+      </div>`;
+}
+
+/* ═══════════════════════════════════════
+   RENDER — SIMULATOR UNLOCK
+═══════════════════════════════════════ */
+function renderSimulator() {
+  document.getElementById('simIdle').style.display    = 'none';
+  document.getElementById('simContent').style.display = 'block';
+  // Reset sliders
+  ['simElecSlider','simTravelSlider','simDeviceSlider'].forEach(id => document.getElementById(id).value = 0);
+  ['simElecVal','simTravelVal','simDeviceVal'].forEach(id => document.getElementById(id).textContent = '0%');
+  document.getElementById('simBefore').textContent     = State.current.score;
+  document.getElementById('simAfter').textContent      = State.current.score;
+  document.getElementById('simImprovement').textContent = 'Adjust sliders to simulate score change';
+  document.getElementById('simImprovement').style.color = 'var(--text-3)';
+}
+
+/* ═══════════════════════════════════════
+   NEURAL CANVAS
+═══════════════════════════════════════ */
+const canvas = document.getElementById('neural-canvas');
+const ctx    = canvas.getContext('2d');
+let nodes    = [], raf, neuralScore = 50, neuralSpeed = 1;
+
+function initNeural() {
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+  nodes = Array.from({ length:55 }, () => ({
+    x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+    vx: (Math.random() - 0.5) * 0.35, vy: (Math.random() - 0.5) * 0.35,
+    r: 1.2 + Math.random() * 2
+  }));
+  if (raf) cancelAnimationFrame(raf);
+  drawNeural();
+}
+
+function updateNeuralState(score, total) {
+  neuralScore = score;
+  neuralSpeed = 1 + Math.min(2, total / 250);
+}
+
+function drawNeural() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  // score → hue: 0=red(bad), 120=green(good), 220=blue(very good)
+  const hue = neuralScore >= 70 ? 160 + (neuralScore - 70) * 1.2 : neuralScore >= 40 ? 40 + (neuralScore - 40) * 4 : neuralScore * 1.3;
+  const nodeColor = `hsl(${hue},65%,58%)`;
+  const maxDist   = 100 + neuralScore * 0.5;
+
+  nodes.forEach(n => {
+    n.x += n.vx * neuralSpeed; n.y += n.vy * neuralSpeed;
+    if (n.x < 0 || n.x > canvas.width)  n.vx *= -1;
+    if (n.y < 0 || n.y > canvas.height) n.vy *= -1;
+  });
+
+  for (let i = 0; i < nodes.length; i++) {
+    for (let j = i + 1; j < nodes.length; j++) {
+      const d = Math.hypot(nodes[i].x - nodes[j].x, nodes[i].y - nodes[j].y);
+      if (d < maxDist) {
+        ctx.beginPath();
+        ctx.moveTo(nodes[i].x, nodes[i].y);
+        ctx.lineTo(nodes[j].x, nodes[j].y);
+        ctx.strokeStyle = `hsla(${hue},55%,55%,${0.12 * (1 - d/maxDist)})`;
+        ctx.lineWidth   = 0.6;
+        ctx.stroke();
+      }
+    }
+  }
+  nodes.forEach(n => {
+    ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI*2);
+    ctx.fillStyle   = nodeColor;
+    ctx.shadowColor = nodeColor; ctx.shadowBlur = 6;
+    ctx.fill(); ctx.shadowBlur = 0;
+  });
+  raf = requestAnimationFrame(drawNeural);
+}
+
+/* ═══════════════════════════════════════
+   ANIMATE NUMBER
+═══════════════════════════════════════ */
+function animateNumber(el, from, to, dur) {
+  const start = performance.now();
+  from = isNaN(from) ? 0 : from;
+  function step(now) {
+    const t = Math.min((now - start) / dur, 1);
+    const eased = 1 - Math.pow(1 - t, 3);
+    const val = from + (to - from) * eased;
+    el.textContent = Number.isInteger(to) ? Math.round(val) : round2(val);
+    if (t < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+/* ═══════════════════════════════════════
+   EXPORT
+═══════════════════════════════════════ */
+function exportCSV() {
+  if (!State.history.length) { showToast('⚠️ No scan data to export.'); return; }
+  const rows = ['Timestamp,Score,Rating,Total CO2 (kg),Electricity (kg),Travel (kg),Device (kg),Transport',
+    ...State.history.map(s =>
+      `${s.ts.toISOString()},${s.score},${s.rating.label},${s.bd.total},${s.bd.electricity},${s.bd.travel},${s.bd.device},${s.transport}`)
+  ];
+  const blob = new Blob([rows.join('\n')], { type:'text/csv' });
+  const a    = Object.assign(document.createElement('a'), { href:URL.createObjectURL(blob), download:`carbonmind-${Date.now()}.csv` });
+  a.click(); URL.revokeObjectURL(a.href);
+  showToast('✅ CSV downloaded');
+}
+
+function exportPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  const c   = State.current;
+
+  doc.setFont('helvetica','bold'); doc.setFontSize(20); doc.setTextColor(59,130,246);
+  doc.text('CarbonMind AI — Carbon Intelligence Report', 20, 22);
+
+  doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor(100,116,139);
+  doc.text(`Generated: ${new Date().toLocaleString()}    Scans in session: ${State.scansRun}`, 20, 30);
+  doc.setDrawColor(40,60,90); doc.setLineWidth(0.3); doc.line(20, 34, 190, 34);
+
+  if (!c) { doc.text('No scan data available.', 20, 44); doc.save('carbonmind-report.pdf'); return; }
+
+  const rating = c.rating;
+  doc.setFont('helvetica','bold'); doc.setFontSize(14); doc.setTextColor(30,41,59);
+  doc.text('Latest Scan Summary', 20, 44);
+
+  const scoreColor = { 'r-excellent':[16,185,129],'r-good':[52,211,153],'r-moderate':[245,158,11],'r-poor':[251,146,60],'r-critical':[244,63,94] };
+  const sc = scoreColor[rating.cls] || [59,130,246];
+  doc.setFont('helvetica','bold'); doc.setFontSize(28); doc.setTextColor(...sc);
+  doc.text(`${c.score}/100`, 20, 56);
+
+  doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.setTextColor(...sc);
+  doc.text(rating.label, 60, 56);
+
+  doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor(30,41,59);
+  const rows = [
+    ['Total CO₂ Emissions', `${c.bd.total} kg/month`],
+    ['Annual Projection',    `${round2(c.bd.total*12)} kg/year`],
+    ['Electricity',          `${c.bd.electricity} kg (${c.bd.pctElec}%)`],
+    ['Travel',               `${c.bd.travel} kg (${c.bd.pctTravel}%) — Mode: ${c.transport}`],
+    ['Device Usage',         `${c.bd.device} kg (${c.bd.pctDevice}%)`],
+    ['Trees to Offset',      `${Math.ceil(c.bd.total*12/20)} trees per year`],
+    ['vs World Average',     `${round1(c.bd.total - GLOBAL_AVG_MONTHLY) > 0 ? '+':'' }${round1(c.bd.total - GLOBAL_AVG_MONTHLY)} kg vs 150 kg/mo average`]
+  ];
+  let y = 66;
+  rows.forEach(([label, value]) => {
+    doc.setTextColor(100,116,139); doc.text(label + ':', 20, y);
+    doc.setTextColor(30,41,59);    doc.text(value, 100, y);
+    y += 8;
+  });
+
+  y += 6;
+  doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(20,184,166);
+  doc.text('Reduction Roadmap', 20, y); y += 8;
+
+  const { weeks } = generateRoadmap(c.bd, c.score);
+  doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(50,65,80);
+  weeks.forEach(w => {
+    doc.setFont('helvetica','bold');   doc.text(w.week + ': ' + w.title, 20, y); y += 6;
+    doc.setFont('helvetica','normal'); doc.text(doc.splitTextToSize(w.detail, 160), 25, y); y += 12;
+    doc.setTextColor(16,185,129);      doc.text('Impact: ' + w.impact, 25, y); y += 8;
+    doc.setTextColor(50,65,80);
+  });
+
+  if (State.history.length > 1) {
+    y += 4;
+    doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(59,130,246);
+    doc.text('Scan History', 20, y); y += 8;
+    doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(80,90,100);
+    State.history.forEach((s, i) => {
+      if (y > 270) return;
+      doc.text(`#${i+1}  ${s.ts.toLocaleTimeString()}  Score: ${s.score}  CO₂: ${s.bd.total} kg  Rating: ${s.rating.label}  Transport: ${s.transport}`, 20, y);
+      y += 7;
+    });
+  }
+
+  doc.save(`carbonmind-report-${Date.now()}.pdf`);
+  showToast('✅ PDF report downloaded');
+}
+
+/* ═══════════════════════════════════════
+   TOAST
+═══════════════════════════════════════ */
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3600);
+}
+
+/* ═══════════════════════════════════════
+   INIT
+═══════════════════════════════════════ */
+window.addEventListener('load', () => {
+  initNeural();
+  // Init slider fill colors
+  ['elecSlider','travelSlider','deviceSlider'].forEach(id => {
+    const el = document.getElementById(id);
+    const pct = ((el.value - el.min) / (el.max - el.min)) * 100;
+    el.style.background = `linear-gradient(90deg, #3b82f6 ${pct}%, #1c2a3a ${pct}%)`;
+    el.addEventListener('input', function() {
+      const p = ((this.value - this.min) / (this.max - this.min)) * 100;
+      this.style.background = `linear-gradient(90deg, #3b82f6 ${p}%, #1c2a3a ${p}%)`;
+    });
+  });
+  ['simElecSlider','simTravelSlider','simDeviceSlider'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.style.background = '#1c2a3a';
+      el.addEventListener('input', function() {
+        const p = ((this.value - this.min) / (this.max - this.min)) * 100;
+        this.style.background = `linear-gradient(90deg, #14b8a6 ${p}%, #1c2a3a ${p}%)`;
+      });
+    }
+  });
+});
+
+window.addEventListener('resize', () => {
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+});
+</script> -->
+</body>
+</html>
